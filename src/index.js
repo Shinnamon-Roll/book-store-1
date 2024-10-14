@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const config = require("../config/config.js");
+const config = require("./config/config.js");
 
 const sequelize = new Sequelize(
   config.development.database,
@@ -16,10 +16,10 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // Import models here
-db.BookStore = require("./bookstore.js")(sequelize, Sequelize);
-db.Books = require("./books.js")(sequelize, Sequelize);
-db.Customers = require("./customers.js")(sequelize, Sequelize);
-db.Members = require("./members.js")(sequelize, Sequelize);
-db.BookTypes = require("./booktypes.js")(sequelize, Sequelize);
+db.BookStore = require("./components/bookstore.js")(sequelize, Sequelize);
+db.Books = require("./components/books.js")(sequelize, Sequelize);
+db.Customers = require("./components/customers.js")(sequelize, Sequelize);
+db.Members = require("./components/members.js")(sequelize, Sequelize);
+db.BookTypes = require("./components/booktypes.js")(sequelize, Sequelize);
 
 module.exports = db;
