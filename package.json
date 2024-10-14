@@ -8,7 +8,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-    
   },
   "keywords": [],
   "author": "",
@@ -21,6 +20,7 @@
     "mysql2": "^3.11.3",
     "pg": "^8.13.0",
     "pg-hstore": "^2.3.4",
+    "react-scripts": "^5.0.1",
     "sequelize": "^6.37.4"
   }
 }
