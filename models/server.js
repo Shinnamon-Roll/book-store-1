@@ -1,7 +1,9 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const db = require("./models");
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./models'); // นำเข้าโมเดลทั้งหมด
+const { Books } = require('./models'); // เปลี่ยนตามชื่อไฟล์โมเดลของคุณ
 const app = express();
+const port = 3000;
 
 app.use(bodyParser.json());
 
@@ -64,9 +66,99 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// Sync database and start the server
+// API สำหรับการเพิ่มหนังสือ
+app.post('/books', async (req, res) => {
+  const { bookName, bookTypeID, bookPrice, description } = req.body;
+
+  try {
+    const newBook = await Books.create({
+      BookName: bookName,
+      BookTypeID: bookTypeID,
+      BookPrice: bookPrice,
+      Description: description
+    });
+    res.status(201).json(newBook);
+  } catch (error) {
+    console.error('Error adding book:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// API สำหรับการอ่านหนังสือทั้งหมด
+app.get('/books', async (req, res) => {
+  try {
+    const books = await Books.findAll();
+    res.status(200).json(books);
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// API สำหรับการอ่านหนังสือตาม ID
+app.get('/books/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const book = await Books.findByPk(id);
+    if (book) {
+      res.status(200).json(book);
+    } else {
+      res.status(404).json({ message: 'Book not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching book:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// API สำหรับการอัปเดตหนังสือ
+app.put('/books/:id', async (req, res) => {
+  const { id } = req.params;
+  const { bookName, bookTypeID, bookPrice, description } = req.body;
+
+  try {
+    const book = await Books.findByPk(id);
+    if (book) {
+      await book.update({
+        BookName: bookName,
+        BookTypeID: bookTypeID,
+        BookPrice: bookPrice,
+        Description: description
+      });
+      res.status(200).json(book);
+    } else {
+      res.status(404).json({ message: 'Book not found' });
+    }
+  } catch (error) {
+    console.error('Error updating book:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// API สำหรับการลบหนังสือ
+app.delete('/books/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const book = await Books.findByPk(id);
+    if (book) {
+      await book.destroy();
+      res.status(204).send(); // ส่งสถานะ 204 No Content
+    } else {
+      res.status(404).json({ message: 'Book not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting book:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ซิงค์ฐานข้อมูลและเริ่มเซิร์ฟเวอร์
 db.sequelize.sync().then(() => {
-  app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
   });
+}).catch(error => {
+  console.error('Unable to connect to the database:', error);
 });
