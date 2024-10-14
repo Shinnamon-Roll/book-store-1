@@ -1,34 +1,208 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+/* General Styles */
+* {
+  box-sizing: border-box; /* Use border-box for all elements */
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  background-color: #333;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 60px;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.login {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.content-wrapper {
+  flex: 1;
+  margin-top: 60px; /* Adjusted to match header height */
+}
+
+.promotion {
+  height: 300px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  margin: 20px 0;
+}
+
+.content {
+  display: flex;
+  margin-top: 20px;
+}
+
+.sidebar {
+  width: 25%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.category {
+  width: 100px;
+  height: 50px;
+  padding: 10px;
+  border: 1px solid #000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+.sidebar li {
+  text-align: center;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.sidebar li:hover {
+  background-color: #ddd;
+}
+
+.book-grid {
+  width: 75%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 30px;
+  padding: 10px;
+}
+
+.book {
+  background-color: #e0e0e0;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+/* Footer */
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 5px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 60px;
+  z-index: 100;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.modal-content {
+  background-color: #000;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
+}
+
+.modal-content select,
+.modal-content input {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-button,
+.register-button {
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.login-button:hover,
+.register-button:hover {
+  background-color: #555;
+}
+
+.register-link {
+  color: rgb(168, 202, 241);
+  cursor: pointer;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+.close-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-icon:hover {
+  color: red;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
   }
-  
-  .app {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* More responsive on smaller screens */
   }
-  
-  h1 {
-    color: #333;
-  }
-  
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  li {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  li:last-child {
-    border-bottom: none;
-  }
-  
+}
