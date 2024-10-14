@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('./models'); // นำเข้าโมเดลทั้งหมด
+const db = require('../src/components/database');
 const { Books, Customers } = require('./models'); // นำเข้าโมเดล Books และ Customers
 const bcrypt = require('bcrypt');
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -155,6 +155,15 @@ app.delete('/books/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+// ตรวจสอบการเชื่อมต่อฐานข้อมูล
+db.sequelize.authenticate()
+    .then(() => {
+        console.log('Connection to the database has been established successfully.');
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
 
 // ซิงค์ฐานข้อมูลและเริ่มเซิร์ฟเวอร์
 db.sequelize.sync().then(() => {
