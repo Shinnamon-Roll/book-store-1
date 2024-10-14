@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./models'); // นำเข้าโมเดลทั้งหมด
-const { Books } = require('./models'); // เปลี่ยนตามชื่อไฟล์โมเดลของคุณ
+const { Books, Customers } = require('./models'); // นำเข้าโมเดล Books และ Customers
+const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000;
 
@@ -33,7 +34,7 @@ app.post('/login', async (req, res) => {
 
     if (user) {
       // ตรวจสอบรหัสผ่าน (กรุณาใช้ bcrypt เพื่อเข้ารหัสรหัสผ่านในฐานข้อมูล)
-      if (user.password === password) { // เปลี่ยนการตรวจสอบรหัสผ่านให้ใช้ bcrypt
+      if (await bcrypt.compare(password, user.password)) { // ใช้ bcrypt ในการตรวจสอบรหัสผ่าน
         res.status(200).json({ message: 'Login successful', user });
       } else {
         res.status(401).json({ message: 'Invalid password' });
@@ -51,9 +52,10 @@ app.post('/register', async (req, res) => {
   const { email, password, name, sex, address } = req.body; // ข้อมูลที่ส่งมา
 
   try {
+    const hashedPassword = await bcrypt.hash(password, 10); // เข้ารหัสรหัสผ่าน
     const newMember = await Customers.create({
       Contact: email,
-      password: password, // ควรใช้ bcrypt สำหรับการเข้ารหัสรหัสผ่าน
+      password: hashedPassword, // ใช้รหัสผ่านที่เข้ารหัส
       CustomerName: name,
       Sex: sex,
       Address: address,
