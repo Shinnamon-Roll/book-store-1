@@ -1,17 +1,35 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('./database'); // อาจต้องเปลี่ยนตามที่ตั้งของไฟล์ database.js ของคุณ
+// src/components/members.js
+const { Model, DataTypes } = require("sequelize");
 
-class Members extends Model {}
+module.exports = (sequelize) => {
+    class Members extends Model {}
 
-Members.init({
-  MemberID: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  Point: DataTypes.INTEGER,
-  JoinDate: DataTypes.DATE,
-  MembershipLevel: DataTypes.STRING,
-}, { sequelize, modelName: 'members' });
+    Members.init(
+        {
+            // Define your attributes here
+            MemberID: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            Point: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            JoinDate: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            MembershipLevel: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+        },
+        {
+            sequelize,
+            modelName: "Members",
+        }
+    );
 
-module.exports = Members;
+    return Members;
+};

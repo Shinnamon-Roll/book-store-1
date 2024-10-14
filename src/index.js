@@ -19,7 +19,7 @@ db.sequelize = sequelize;
 db.BookStore = require("./components/bookstore.js")(sequelize, Sequelize);
 db.Books = require("./components/books.js")(sequelize, Sequelize);
 db.Customers = require("./components/customers.js")(sequelize, Sequelize);
-db.Members = require("./components/members.js")(sequelize, Sequelize);
+db.Members = require("./components/members.js")(sequelize); // Pass sequelize only
 db.BookTypes = require("./components/booktypes.js")(sequelize, Sequelize);
 
 module.exports = db;
