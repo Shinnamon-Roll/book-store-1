@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('../src/components/database');
-const { Books, Customers } = require('./models'); // นำเข้าโมเดล Books และ Customers
+const db = require('./src/components/database');
+const { Books, Customers } = require('./models'); // Import Books and Customers models
 const bcrypt = require('bcrypt');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,17 +24,14 @@ app.use("/members", memberRoutes);
 const booktypeRoutes = require("./routes/booktypes");
 app.use("/booktypes", booktypeRoutes);
 
-// API สำหรับการล็อกอิน
+// Login API
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body; // เปลี่ยนตามข้อมูลที่ส่งมา
+  const { email, password } = req.body;
 
   try {
-    // ค้นหาผู้ใช้จากตาราง Members หรือ Customers
-    const user = await Customers.findOne({ where: { Contact: email } }); // หรือใช้ Members ตามที่ต้องการ
-
+    const user = await Customers.findOne({ where: { Contact: email } });
     if (user) {
-      // ตรวจสอบรหัสผ่าน (กรุณาใช้ bcrypt เพื่อเข้ารหัสรหัสผ่านในฐานข้อมูล)
-      if (await bcrypt.compare(password, user.password)) { // ใช้ bcrypt ในการตรวจสอบรหัสผ่าน
+      if (await bcrypt.compare(password, user.password)) {
         res.status(200).json({ message: 'Login successful', user });
       } else {
         res.status(401).json({ message: 'Invalid password' });
@@ -47,15 +44,15 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// API สำหรับการลงทะเบียน
+// Registration API
 app.post('/register', async (req, res) => {
-  const { email, password, name, sex, address } = req.body; // ข้อมูลที่ส่งมา
+  const { email, password, name, sex, address } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // เข้ารหัสรหัสผ่าน
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newMember = await Customers.create({
       Contact: email,
-      password: hashedPassword, // ใช้รหัสผ่านที่เข้ารหัส
+      password: hashedPassword,
       CustomerName: name,
       Sex: sex,
       Address: address,
@@ -68,7 +65,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// API สำหรับการเพิ่มหนังสือ
+// Other APIs for books (Add, Read, Update, Delete)
 app.post('/books', async (req, res) => {
   const { bookName, bookTypeID, bookPrice, description } = req.body;
 
@@ -86,7 +83,6 @@ app.post('/books', async (req, res) => {
   }
 });
 
-// API สำหรับการอ่านหนังสือทั้งหมด
 app.get('/books', async (req, res) => {
   try {
     const books = await Books.findAll();
@@ -97,7 +93,6 @@ app.get('/books', async (req, res) => {
   }
 });
 
-// API สำหรับการอ่านหนังสือตาม ID
 app.get('/books/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -114,7 +109,6 @@ app.get('/books/:id', async (req, res) => {
   }
 });
 
-// API สำหรับการอัปเดตหนังสือ
 app.put('/books/:id', async (req, res) => {
   const { id } = req.params;
   const { bookName, bookTypeID, bookPrice, description } = req.body;
@@ -138,7 +132,6 @@ app.put('/books/:id', async (req, res) => {
   }
 });
 
-// API สำหรับการลบหนังสือ
 app.delete('/books/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -146,7 +139,7 @@ app.delete('/books/:id', async (req, res) => {
     const book = await Books.findByPk(id);
     if (book) {
       await book.destroy();
-      res.status(204).send(); // ส่งสถานะ 204 No Content
+      res.status(204).send();
     } else {
       res.status(404).json({ message: 'Book not found' });
     }
@@ -156,7 +149,7 @@ app.delete('/books/:id', async (req, res) => {
   }
 });
 
-// ตรวจสอบการเชื่อมต่อฐานข้อมูล
+// Check database connection
 db.sequelize.authenticate()
     .then(() => {
         console.log('Connection to the database has been established successfully.');
@@ -165,10 +158,10 @@ db.sequelize.authenticate()
         console.error('Unable to connect to the database:', err);
     });
 
-// ซิงค์ฐานข้อมูลและเริ่มเซิร์ฟเวอร์
+// Sync database and start server
 db.sequelize.sync().then(() => {
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
 }).catch(error => {
   console.error('Unable to connect to the database:', error);
